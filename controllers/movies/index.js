@@ -38,7 +38,7 @@ router.post('/list/:id/add', (req, res) => {
     try {
         const listtMovie = movieMethods.addMovie(req)
         res.status(200).json({
-            message: 'lista de usuario ' + listtMovie['owner'],
+            message: 'lista de usuario ' + listtMovie['owner']+ " Actualizada",
             data: listtMovie
         });
 
@@ -49,8 +49,16 @@ router.post('/list/:id/add', (req, res) => {
 });
 
 router.delete('/list/:id/delete/:movie_id', (req, res) => {
-    res.send("Endpoint para eliminar peliculas a una lista: ",
-        JSON.stringify(req.params));
+    try {
+        const listtMovie = movieMethods.deleteMovie(req)
+        res.status(200).json({
+            message: 'lista de usuario Actualizada',
+            data: listtMovie
+        });
+
+    } catch (error) {
+        res.status(400).json(error);
+    }
 });
 
 router.put('/list/:id/rate', (req, res) => {

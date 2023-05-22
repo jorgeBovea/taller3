@@ -10,7 +10,7 @@ const movieListSchema = new Schema({
         type: String,
         require: [true, 'El nickname del usuario es obligatorio.']
     },
-    nickname:{
+    nicknameUser:{
         type: String
     },
     rating: {
@@ -28,4 +28,5 @@ const movieListSchema = new Schema({
  * construimos finalmente el modelo a partir del eschema definido.
  */
 const movieList = model('MovieList', movieListSchema);
+
 module.exports = movieList;

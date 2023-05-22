@@ -16,7 +16,9 @@ const setUpMongoDBProcessWatchers = () => {
   //process.on('SIGKILL', gracefulShutdown);
 
   // cerrar conexion en excepciones no controladas.
-  process.on('uncaughtException', gracefulShutdown);
+  process.on('uncaughtException', (error) =>{ 
+      console.log(error.message)
+    gracefulShutdown});
 };
 
 module.exports = { gracefulShutdown, setUpMongoDBProcessWatchers }
