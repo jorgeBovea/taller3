@@ -4,6 +4,21 @@ const authMiddleware = require('../../middlewares/authorization');
 const movieMethods = require('./methods')
 router.use(authMiddleware);
 
+router.post('/list/:id/createlist', async (req, res) => {
+    try {
+        const listtMovie =await movieMethods.createList(req)
+        res.status(200).json({
+            message: 'lista de usuario ' + listtMovie['owner']+ " Actualizada",
+            data: listtMovie
+        });
+
+    } catch (error) {
+        res.status(400).json(error);
+    }
+
+});
+
+
 
 router.get('/list/all', async (req, res) => {
     try {
@@ -34,9 +49,9 @@ router.get('/list/:id', async (req, res) => {
 
 });
 
-router.post('/list/:id/add', (req, res) => {
+router.post('/list/:id/add', async (req, res) => {
     try {
-        const listtMovie = movieMethods.addMovie(req)
+        const listtMovie = await movieMethods.addMovie(req)
         res.status(200).json({
             message: 'lista de usuario ' + listtMovie['owner']+ " Actualizada",
             data: listtMovie
@@ -48,9 +63,10 @@ router.post('/list/:id/add', (req, res) => {
 
 });
 
-router.delete('/list/:id/delete/:movie_id', (req, res) => {
+router.delete('/list/:id/delete/:movie_id', async (req, res) => {
     try {
-        const listtMovie = movieMethods.deleteMovie(req)
+        const listtMovie =  await movieMethods.deleteMovie(req)
+
         res.status(200).json({
             message: 'lista de usuario Actualizada',
             data: listtMovie
@@ -61,8 +77,18 @@ router.delete('/list/:id/delete/:movie_id', (req, res) => {
     }
 });
 
-router.put('/list/:id/rate', (req, res) => {
-    res.send("Endpoint para calificar listas de otros usuarios");
+router.put('/list/:id/rate', async (req, res) => {
+    try {
+        const listtMovie =  await movieMethods.rateList(req)
+
+        res.status(200).json({
+            message: 'lista de usuario Actualizada',
+            data: listtMovie
+        });
+
+    } catch (error) {
+        res.status(400).json(error);
+    }
 });
 
 module.exports = router;

@@ -5,25 +5,33 @@ const { request } = require("../../app");
 
 
 //Metodo para califcar listas 
-const rateList = async () => {
+const rateList = async (request) => {
     const payload = request.body
     const idUser = request.params.id
     const rate = payload["rate"]
     const currentUser = await User.findOne({ '_id': idUser })
-
+    console.log("encontr user")
     if (currentUser) {
+        console.log("encontr user")
         const movieList = await MovieList.findOne({ 'owner': idUser })
         if (movieList) {
+            
 
             await MovieList.findByIdAndUpdate(movieList.id,
-                { rate: rate },
+                { "rating": rate },
                 { new: true }
             )
 
-            const movieList = await MovieList.findOne({ 'owner': idUser })
-            return movieList
+            const movieListnew = await MovieList.findOne({ 'owner': idUser })
+            console.log(movieListnew)
+            return movieListnew
+        } else {
+
+            throw new error('lista no encontrada.');
+
         }
     }
+    throw new error('usuario no encontrado.');
 }
 
 //Metodo muestra todas las listas disponibles
@@ -43,7 +51,7 @@ const showMovieListByUser = async (request) => {
         const movieList = await MovieList.findOne({ 'owner': idUser })
         return movieList
     }
-    return {}
+    throw new error('usuario no encontrado.');
 }
 
 //Metodo elimina la lista de un usuario
@@ -63,8 +71,8 @@ const deleteMovie = async (request) => {
                 { $pull: { movies: { _id: idMovie } } },
                 { new: true }
             )
-            const movieList = await MovieList.findOne({ 'owner': idUser })
-            return movieList
+            const movieListNew = await MovieList.findOne({ 'owner': idUser })
+            return movieListNew
         } else {
             throw new error('Usuario no tiene listas.');
         }
@@ -90,8 +98,8 @@ const addMovie = async (request) => {
                 { new: true }
             )
 
-            const movieList = await MovieList.findOne({ 'owner': idUser })
-            return movieList
+            const movieListNew = await MovieList.findOne({ 'owner': idUser })
+            return movieListNew
         } else {
             const newMovielist = new MovieList()
             newMovielist.name = "defaul"
@@ -113,25 +121,25 @@ const addMovie = async (request) => {
 
 //Metodo para crear Lista
 
-const createList = async (request) =>{
+const createList = async (request) => {
     const payload = request.body
     const idUser = request.params.id
     const currentUser = await User.findOne({ '_id': idUser })
 
     if (currentUser) {
-        const movieList = await MovieList.findOne({ 'owner': idUser })
+        const movieListOld = await MovieList.findOne({ 'owner': idUser })
         console.log("lista ", movieList)
-        if (movieList) {
+        if (movieListOld) {
             throw new error('Usuario ya posee una lista.');
         }
-        const movielist = new  MovieList(payload)
+        const movielist = new MovieList(payload)
         await movielist.save()
         return movieList
-       
-    }else{
+
+    } else {
         throw new error('Usuario no encontrado.');
 
     }
 }
 
-module.exports = { addMovie, showMovieList, showMovieListByUser, deleteMovie ,createList,rateList}
+module.exports = { addMovie, showMovieList, showMovieListByUser, deleteMovie, createList, rateList }
